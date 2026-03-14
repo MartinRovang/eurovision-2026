@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Eurovision 2026 — Music Video Review Booklets</title>
+<style>
+  @page {
+    size: A4 landscape;
+    margin: 8mm;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+    font-size: 9px;
+    color: #1a1a1a;
+    line-height: 1.3;
+  }
+
+  .page {
+    page-break-after: always;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    position: relative;
+  }
+  .page:last-child { page-break-after: auto; }
+
+  /* Dotted fold line */
+  .fold-line {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    bottom: 0;
+    border-left: 2px dashed #bbb;
+    z-index: 10;
+  }
+  .fold-label {
+    position: absolute;
+    left: 50%;
+    top: 4px;
+    transform: translateX(-50%);
+    background: #fff;
+    color: #aaa;
+    font-size: 7px;
+    padding: 1px 6px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    z-index: 11;
+  }
+
+  /* LEFT HALF = content (inside when folded) */
+  .content-panel {
+    width: 50%;
+    padding: 8px 14px 8px 8px;
+    overflow: hidden;
+  }
+
+  /* RIGHT HALF = cover (front when folded) */
+  .cover-panel {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 20px;
+    border-left: none;
+    background: linear-gradient(135deg, #0a0a2e 0%, #1a1a4e 40%, #2d1b69 100%);
+    color: #fff;
+  }
+  .cover-flag {
+    font-size: 64px;
+    margin-bottom: 12px;
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
+  }
+  .cover-country {
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.4);
+  }
+  .cover-divider {
+    width: 60px;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #f0c040, transparent);
+    margin: 8px auto;
+  }
+  .cover-type {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: #f0c040;
+    margin-bottom: 4px;
+  }
+  .cover-subtitle {
+    font-size: 9px;
+    color: #aab;
+    font-style: italic;
+    margin-top: 4px;
+  }
+  .cover-year {
+    font-size: 42px;
+    font-weight: 200;
+    color: rgba(255,255,255,0.12);
+    position: absolute;
+    bottom: 16px;
+    right: 30px;
+    letter-spacing: 4px;
+  }
+  .cover-stars {
+    color: #f0c040;
+    font-size: 14px;
+    letter-spacing: 6px;
+    margin-top: 12px;
+  }
+
+  /* Info table */
+  .info-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 5px;
+    font-size: 8.5px;
+  }
+  .info-table td {
+    padding: 2px 5px;
+    border: 1px solid #ccc;
+  }
+  .info-table td:first-child {
+    font-weight: bold;
+    width: 55px;
+    background: #f5f5f5;
+    font-size: 8px;
+  }
+
+  /* Section headers */
+  .content-panel h2 {
+    font-size: 9px;
+    background: #1a1a2e;
+    color: #fff;
+    padding: 2px 6px;
+    margin: 4px 0 3px;
+    letter-spacing: 0.5px;
+  }
+
+  /* Checklist */
+  .checklist {
+    columns: 2;
+    column-gap: 10px;
+    margin-bottom: 3px;
+  }
+  .checklist-section {
+    break-inside: avoid;
+    margin-bottom: 3px;
+  }
+  .checklist-section h3 {
+    font-size: 8.5px;
+    border-bottom: 0.5px solid #999;
+    padding-bottom: 0.5px;
+    margin-bottom: 1.5px;
+    color: #333;
+  }
+  .checklist-section label {
+    display: block;
+    padding: 0.5px 0;
+    font-size: 8px;
+  }
+  .checklist-section label::before {
+    content: "\2610";
+    margin-right: 3px;
+    font-size: 9px;
+  }
+
+  /* Notes */
+  .notes-box {
+    border: 1px solid #bbb;
+    min-height: 28px;
+    padding: 2px 4px;
+    margin-bottom: 3px;
+    font-style: italic;
+    color: #bbb;
+    font-size: 7px;
+  }
+
+  /* Rating table */
+  .rating-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 8px;
+    margin-bottom: 3px;
+  }
+  .rating-table th, .rating-table td {
+    border: 1px solid #ccc;
+    padding: 1.5px 4px;
+    text-align: center;
+  }
+  .rating-table th {
+    background: #f0f0f0;
+    text-align: left;
+    font-size: 7.5px;
+  }
+  .rating-table td:last-child { width: 50px; }
+  .rating-table tr:last-child { font-weight: bold; background: #f9f9f9; }
+
+  .winner-row {
+    font-size: 8px;
+    text-align: center;
+    padding: 2px;
+    border: 1px solid #ccc;
+    background: #fafafa;
+  }
+  .winner-row span { margin: 0 4px; }
+
+  @media print {
+    .page { page-break-after: always; }
+    .page:last-child { page-break-after: auto; }
+    .fold-line { border-left-color: #ccc; }
+  }
+</style>
+</head>
+<body>
+
+<script>
+const countries = [
+  { name: "Albania", flag: "\u{1F1E6}\u{1F1F1}" },
+  { name: "Armenia", flag: "\u{1F1E6}\u{1F1F2}" },
+  { name: "Australia", flag: "\u{1F1E6}\u{1F1FA}" },
+  { name: "Austria", flag: "\u{1F1E6}\u{1F1F9}" },
+  { name: "Azerbaijan", flag: "\u{1F1E6}\u{1F1FF}" },
+  { name: "Belgium", flag: "\u{1F1E7}\u{1F1EA}" },
+  { name: "Croatia", flag: "\u{1F1ED}\u{1F1F7}" },
+  { name: "Cyprus", flag: "\u{1F1E8}\u{1F1FE}" },
+  { name: "Czechia", flag: "\u{1F1E8}\u{1F1FF}" },
+  { name: "Denmark", flag: "\u{1F1E9}\u{1F1F0}" },
+  { name: "Estonia", flag: "\u{1F1EA}\u{1F1EA}" },
+  { name: "Finland", flag: "\u{1F1EB}\u{1F1EE}" },
+  { name: "France", flag: "\u{1F1EB}\u{1F1F7}" },
+  { name: "Georgia", flag: "\u{1F1EC}\u{1F1EA}" },
+  { name: "Germany", flag: "\u{1F1E9}\u{1F1EA}" },
+  { name: "Greece", flag: "\u{1F1EC}\u{1F1F7}" },
+  { name: "Iceland", flag: "\u{1F1EE}\u{1F1F8}" },
+  { name: "Ireland", flag: "\u{1F1EE}\u{1F1EA}" },
+  { name: "Israel", flag: "\u{1F1EE}\u{1F1F1}" },
+  { name: "Italy", flag: "\u{1F1EE}\u{1F1F9}" },
+  { name: "Latvia", flag: "\u{1F1F1}\u{1F1FB}" },
+  { name: "Lithuania", flag: "\u{1F1F1}\u{1F1F9}" },
+  { name: "Luxembourg", flag: "\u{1F1F1}\u{1F1FA}" },
+  { name: "Malta", flag: "\u{1F1F2}\u{1F1F9}" },
+  { name: "Moldova", flag: "\u{1F1F2}\u{1F1E9}" },
+  { name: "Montenegro", flag: "\u{1F1F2}\u{1F1EA}" },
+  { name: "Netherlands", flag: "\u{1F1F3}\u{1F1F1}" },
+  { name: "North Macedonia", flag: "\u{1F1F2}\u{1F1F0}" },
+  { name: "Norway", flag: "\u{1F1F3}\u{1F1F4}" },
+  { name: "Poland", flag: "\u{1F1F5}\u{1F1F1}" },
+  { name: "Portugal", flag: "\u{1F1F5}\u{1F1F9}" },
+  { name: "Romania", flag: "\u{1F1F7}\u{1F1F4}" },
+  { name: "San Marino", flag: "\u{1F1F8}\u{1F1F2}" },
+  { name: "Serbia", flag: "\u{1F1F7}\u{1F1F8}" },
+  { name: "Slovenia", flag: "\u{1F1F8}\u{1F1EE}" },
+  { name: "Spain", flag: "\u{1F1EA}\u{1F1F8}" },
+  { name: "Sweden", flag: "\u{1F1F8}\u{1F1EA}" },
+  { name: "Switzerland", flag: "\u{1F1E8}\u{1F1ED}" },
+  { name: "Ukraine", flag: "\u{1F1FA}\u{1F1E6}" },
+  { name: "United Kingdom", flag: "\u{1F1EC}\u{1F1E7}" }
+];
+
+for (const c of countries) {
+  document.write(`
+  <div class="page">
+    <div class="fold-line"></div>
+    <div class="fold-label">\u2702 fold here</div>
+
+    <div class="content-panel">
+      <table class="info-table">
+        <tr><td>Artist</td><td></td></tr>
+        <tr><td>Song</td><td></td></tr>
+        <tr><td>Link</td><td></td></tr>
+      </table>
+
+      <h2>Music Video Checklist</h2>
+      <div class="checklist">
+        <div class="checklist-section">
+          <h3>Production</h3>
+          <label>High budget production</label>
+          <label>Cinematic / film quality</label>
+          <label>Creative editing</label>
+          <label>Colour grading on point</label>
+          <label>Special effects / CGI</label>
+        </div>
+        <div class="checklist-section">
+          <h3>Visual Story</h3>
+          <label>Clear narrative</label>
+          <label>Emotional arc</label>
+          <label>Symbolic imagery</label>
+          <label>Cultural references</label>
+          <label>Location shots</label>
+          <label>Set design</label>
+        </div>
+        <div class="checklist-section">
+          <h3>Fashion</h3>
+          <label>Stunning outfit(s)</label>
+          <label>Multiple looks</label>
+          <label>National fashion</label>
+          <label>Hair & makeup</label>
+          <label>Cohesive colours</label>
+          <label>Retro vibes</label>
+        </div>
+        <div class="checklist-section">
+          <h3>Performance</h3>
+          <label>Great lip-sync energy</label>
+          <label>Choreography</label>
+          <label>Chemistry</label>
+          <label>Raw emotion</label>
+          <label>Star power</label>
+        </div>
+        <div class="checklist-section">
+          <h3>Music</h3>
+          <label>Native language</label>
+          <label>Catchy hook</label>
+          <label>Unique sound</label>
+          <label>Vocal moments</label>
+          <label>Great instrumental</label>
+          <label>Makes you dance</label>
+        </div>
+        <div class="checklist-section">
+          <h3>Eurovision Factor</h3>
+          <label>Works live on stage</label>
+          <label>Party / fun vibes</label>
+          <label>Emotional / tears</label>
+          <label>Quirky / weird</label>
+          <label>Radio friendly</label>
+          <label>Replay value</label>
+        </div>
+      </div>
+
+      <h2>Notes</h2>
+      <div class="notes-box">First impressions & detailed thoughts...</div>
+
+      <h2>Rating</h2>
+      <table class="rating-table">
+        <tr><th>Song</th><th>Vocals</th><th>Video</th><th>Aesthetics</th><th>Replay</th><th>Total</th></tr>
+        <tr><td>/10</td><td>/10</td><td>/10</td><td>/10</td><td>/10</td><td><strong>/50</strong></td></tr>
+      </table>
+      <div class="winner-row">
+        <span>\u2610 Dark Horse</span>
+        <span>\u2610 Contender</span>
+        <span>\u2610 Favourite</span>
+        <span>\u2610 Unlikely</span>
+      </div>
+    </div>
+
+    <div class="cover-panel">
+      <div class="cover-flag">${c.flag}</div>
+      <div class="cover-country">${c.name}</div>
+      <div class="cover-divider"></div>
+      <div class="cover-type">Music Video Review</div>
+      <div class="cover-subtitle">Eurovision Song Contest 2026 &mdash; Vienna, Austria</div>
+      <div class="cover-stars">\u2605 \u2605 \u2605</div>
+      <div class="cover-year">2026</div>
+    </div>
+  </div>
+  `);
+}
+</script>
+
+</body>
+</html>
